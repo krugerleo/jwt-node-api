@@ -8,6 +8,12 @@ const app = express();
 
 app.use(express.json());
 
+const auth = require("./middleware/auth");
+
+app.post("/welcome", auth, (req, res) => {
+    res.status(200).send("Welcome 🙌 ");
+});
+
 // Register
 app.post('/register', async (req,res) =>{
     try {
@@ -56,7 +62,34 @@ app.post('/register', async (req,res) =>{
 });
 
 // Login
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
+    // Login logic
+    try {
+        // User input
+        const {email, password} = req.body;
+
+        // Validate user input]
+        const user = await User.findOne({email});
+
+        if (user && (await bcrypt.compare(password, user.password))){
+            // create token
+            const token = jwt.sign(
+                {user_id: user._id, email},
+                process.env.TOKEN_KEY,
+                {
+                    expiresIn:"2h",
+                }
+            );
+
+            // save user token
+            user.token = token
+            //user
+            res.status(200).json(user);
+        }
+        res.status.send("Invalid Credentials");
+    } catch (error) {
+        console.log(err);
+    }
 
 });
 

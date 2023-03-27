@@ -1,6 +1,8 @@
 require('dotenv').config();
 require('./config/database').connect();
 
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const express = require('express');
 const User = require('./model/user');
 
@@ -88,7 +90,7 @@ app.post('/login', async (req, res) => {
         }
         res.status.send("Invalid Credentials");
     } catch (error) {
-        console.log(err);
+        console.log(error);
     }
 
 });

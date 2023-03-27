@@ -11,7 +11,7 @@ app.use(express.json());
 const auth = require("./middleware/auth");
 
 app.post("/welcome", auth, (req, res) => {
-    res.status(200).send("Welcome 🙌 ");
+    res.send("Welcome 🙌 ");
 });
 
 // Register
